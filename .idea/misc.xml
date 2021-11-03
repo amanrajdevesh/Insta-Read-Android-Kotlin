@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="app/src/main/res/drawable/edittext_round_shape.xml" value="0.27870370370370373" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_feed.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/fragment_library.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_post.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_read_later.xml" value="0.2833333333333333" />
+        <entry key="app/src/main/res/layout/fragment_search.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_user.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_user_post.xml" value="0.2833333333333333" />
+        <entry key="app/src/main/res/layout/item_demo.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/item_search.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/item_user_book.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/nav_header.xml" value="0.22" />
+        <entry key="app/src/main/res/menu/bottom_menu.xml" value="0.16993464052287582" />
+        <entry key="app/src/main/res/menu/drawer_menu.xml" value="0.1780821917808219" />
+        <entry key="app/src/main/res/menu/overflow_menu.xml" value="0.2833333333333333" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_X" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

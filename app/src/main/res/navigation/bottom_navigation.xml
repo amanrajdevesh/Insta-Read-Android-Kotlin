@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_navigation"
+    app:startDestination="@id/feedFragment">
+
+    <fragment
+        android:id="@+id/feedFragment"
+        android:name="com.example.bookapp.ui.fragments.FeedFragment"
+        android:label="Feed"
+        tools:layout="@layout/fragment_feed" />
+    <fragment
+        android:id="@+id/postFragment"
+        android:name="com.example.bookapp.ui.fragments.PostFragment"
+        android:label="Post"
+        tools:layout="@layout/fragment_post" >
+        <argument
+            android:name="item"
+            app:argType="com.example.bookapp.modals.Item" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.bookapp.ui.fragments.SearchFragment"
+        android:label="Search"
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_postFragment"
+            app:destination="@id/postFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userFragment"
+        android:name="com.example.bookapp.ui.fragments.UserFragment"
+        android:label="User"
+        tools:layout="@layout/fragment_user" />
+</navigation>
