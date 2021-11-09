@@ -1,5 +1,3 @@
-# Insta-Read-Android-Kotlin
-A fully featured Android App built for Book Readers.
 
 # InstaRead
 
