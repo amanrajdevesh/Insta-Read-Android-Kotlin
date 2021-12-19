@@ -13,20 +13,30 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.squareup.picasso.Picasso
 
-class LibraryAdapter(private val options: FirestoreRecyclerOptions<VolumeInfo>) : FirestoreRecyclerAdapter<VolumeInfo, LibraryViewHolder>(options){
+class LibraryAdapter(private val options: FirestoreRecyclerOptions<VolumeInfo> ,
+    val libClicked : OnLibClickListener) : FirestoreRecyclerAdapter<VolumeInfo, LibraryViewHolder>(options){
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibraryViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_user_book, parent, false)
-        return LibraryViewHolder(view)
+        val viewHolder =
+            LibraryViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_user_book, parent, false))
+        viewHolder.image.setOnClickListener {
+            libClicked.onLibClicked(snapshots.getSnapshot(viewHolder.adapterPosition).id)
+        }
+        return viewHolder
     }
 
     override fun onBindViewHolder(holder: LibraryViewHolder, position: Int, model: VolumeInfo) {
-        Picasso.get().load(model.imageLinks.getImage()).into(holder.image)
+        val image = model.imageLinks.getImage()
+        if(image.isNotEmpty()){
+            Picasso.get().load(image).into(holder.image)}
     }
 }
 
 class LibraryViewHolder(view : View) : RecyclerView.ViewHolder(view) {
-    val image = view.findViewById<ImageView>(R.id.libraryImage)
+    val image: ImageView = view.findViewById<ImageView>(R.id.libraryImage)
+}
+
+interface OnLibClickListener {
+    fun onLibClicked(bookId : String)
 }

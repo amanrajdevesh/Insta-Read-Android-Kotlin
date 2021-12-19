@@ -9,7 +9,11 @@
         android:id="@+id/feedFragment"
         android:name="com.example.bookapp.ui.fragments.FeedFragment"
         android:label="Feed"
-        tools:layout="@layout/fragment_feed" />
+        tools:layout="@layout/fragment_feed" >
+        <action
+            android:id="@+id/action_feedFragment_to_postUserFragment"
+            app:destination="@id/postUserFragment" />
+    </fragment>
     <fragment
         android:id="@+id/postFragment"
         android:name="com.example.bookapp.ui.fragments.PostFragment"
@@ -33,4 +37,12 @@
         android:name="com.example.bookapp.ui.fragments.UserFragment"
         android:label="User"
         tools:layout="@layout/fragment_user" />
+    <fragment
+        android:id="@+id/postBookFragment"
+        android:name="com.example.bookapp.ui.fragments.PostBookFragment"
+        android:label="PostBookFragment" />
+    <fragment
+        android:id="@+id/postUserFragment"
+        android:name="com.example.bookapp.ui.fragments.PostUserFragment"
+        android:label="PostUserFragment" />
 </navigation>

@@ -4,26 +4,49 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable/edittext_round_shape.xml" value="0.27870370370370373" />
+        <entry key="app/src/main/res/drawable/ic_baseline_bookmark_border_24.xml" value="0.27870370370370373" />
+        <entry key="app/src/main/res/drawable/ic_baseline_favorite_border_24.xml" value="0.27870370370370373" />
+        <entry key="app/src/main/res/drawable/ic_baseline_local_library_24.xml" value="0.27870370370370373" />
+        <entry key="app/src/main/res/drawable/ic_baseline_menu_book_24.xml" value="0.27870370370370373" />
+        <entry key="app/src/main/res/drawable/ic_baseline_post_add_24.xml" value="0.27870370370370373" />
+        <entry key="app/src/main/res/layout/activity_book.xml" value="0.2" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/activity_sign_up.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/content_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_book_bottom_sheet_dialog.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_book_dialog.xml" value="0.29791666666666666" />
+        <entry key="app/src/main/res/layout/fragment_book_info.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_dialog.xml" value="0.29791666666666666" />
         <entry key="app/src/main/res/layout/fragment_feed.xml" value="0.18" />
         <entry key="app/src/main/res/layout/fragment_library.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_post.xml" value="0.22" />
-        <entry key="app/src/main/res/layout/fragment_read_later.xml" value="0.2833333333333333" />
+        <entry key="app/src/main/res/layout/fragment_post_book.xml" value="0.26927083333333335" />
+        <entry key="app/src/main/res/layout/fragment_post_feed.xml" value="0.29791666666666666" />
+        <entry key="app/src/main/res/layout/fragment_post_library.xml" value="0.29791666666666666" />
+        <entry key="app/src/main/res/layout/fragment_post_read_later.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/fragment_post_user.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_read_later.xml" value="0.2" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/fragment_user.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_search_book.xml" value="0.2833333333333333" />
+        <entry key="app/src/main/res/layout/fragment_user.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_user_bottom_sheet_dialog.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_user_post.xml" value="0.2833333333333333" />
         <entry key="app/src/main/res/layout/item_demo.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/item_fav.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/item_post.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/item_progress.xml" value="0.29791666666666666" />
         <entry key="app/src/main/res/layout/item_search.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_user_book.xml" value="0.18" />
         <entry key="app/src/main/res/layout/nav_header.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/toolbar.xml" value="0.29791666666666666" />
         <entry key="app/src/main/res/menu/bottom_menu.xml" value="0.16993464052287582" />
         <entry key="app/src/main/res/menu/drawer_menu.xml" value="0.1780821917808219" />
         <entry key="app/src/main/res/menu/overflow_menu.xml" value="0.2833333333333333" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_X" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_15" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

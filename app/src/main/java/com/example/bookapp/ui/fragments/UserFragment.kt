@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bookapp.R
+import com.example.bookapp.adapters.FavAdapter
 import com.example.bookapp.adapters.LibraryAdapter
 import com.example.bookapp.adapters.UserViewPagerAdapter
 import com.example.bookapp.dao.UserDao
@@ -32,7 +33,7 @@ import kotlinx.coroutines.withContext
 class UserFragment : Fragment() {
 
     lateinit var binding: FragmentUserBinding
-    lateinit var adapter: LibraryAdapter
+    lateinit var adapter: FavAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,6 +51,7 @@ class UserFragment : Fragment() {
         list.add(UserPostFragment())
         list.add(LibraryFragment())
         list.add(ReadLaterFragment())
+        //list.add(BookDialogFragment())
 
         binding.viewPager.adapter = UserViewPagerAdapter(childFragmentManager, lifecycle , list)
         TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
@@ -63,7 +65,7 @@ class UserFragment : Fragment() {
             .whereEqualTo("favourite",true)
         val option = FirestoreRecyclerOptions.Builder<VolumeInfo>().setQuery(query,VolumeInfo::class.java).build()
 
-        adapter = LibraryAdapter(option)
+        adapter = FavAdapter(option)
         binding.recyclerView2.layoutManager = LinearLayoutManager(activity,LinearLayoutManager.HORIZONTAL,false)
         binding.recyclerView2.adapter = adapter
 

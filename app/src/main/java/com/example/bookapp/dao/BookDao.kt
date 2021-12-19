@@ -8,9 +8,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 
 class BookDao {
@@ -28,5 +26,14 @@ class BookDao {
         }
     }
 
+    private fun getBookById(postId : String) : Task<DocumentSnapshot> {
+        return bookCollection.document(postId).get()
+    }
+
+    suspend fun getBook(postId : String) : VolumeInfo {
+        return CoroutineScope(Dispatchers.IO).async {
+            getBookById(postId).await().toObject(VolumeInfo::class.java)!!
+        }.await()
+    }
 
 }

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bookapp.R
 import com.example.bookapp.adapters.LibraryAdapter
+import com.example.bookapp.adapters.OnLibClickListener
 import com.example.bookapp.databinding.FragmentLibraryBinding
 import com.example.bookapp.databinding.FragmentReadLaterBinding
 import com.example.bookapp.modals.VolumeInfo
@@ -18,7 +19,7 @@ import com.google.firebase.FirebaseOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-class ReadLaterFragment : Fragment() {
+class ReadLaterFragment : Fragment() , OnLibClickListener {
 
     lateinit var binding: FragmentReadLaterBinding
     lateinit var adapter: LibraryAdapter
@@ -41,7 +42,7 @@ class ReadLaterFragment : Fragment() {
             .whereEqualTo("readLater" , true)
         val option = FirestoreRecyclerOptions.Builder<VolumeInfo>().setQuery(query , VolumeInfo::class.java).build()
 
-        adapter = LibraryAdapter(option)
+        adapter = LibraryAdapter(option,this)
         binding.libraryRecyclerView.layoutManager = GridLayoutManager(activity,2,
             RecyclerView.VERTICAL,false)
         binding.libraryRecyclerView.adapter = adapter
@@ -55,5 +56,9 @@ class ReadLaterFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         adapter.stopListening()
+    }
+
+    override fun onLibClicked(bookId: String) {
+
     }
 }

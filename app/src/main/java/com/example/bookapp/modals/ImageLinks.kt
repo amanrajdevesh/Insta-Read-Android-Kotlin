@@ -10,7 +10,10 @@ class ImageLinks(
     var image_url : String = ""
 ) : Parcelable{
     fun getImage() : String{
-        this.image_url = "https"+thumbnail.substring(4)
+        if(smallThumbnail.isEmpty()){
+            return smallThumbnail
+        }
+        this.image_url = "https"+smallThumbnail.substring(4)
         return image_url
     }
 }

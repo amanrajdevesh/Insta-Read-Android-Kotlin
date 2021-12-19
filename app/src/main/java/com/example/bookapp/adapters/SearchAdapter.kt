@@ -42,7 +42,9 @@ class SearchAdapter(private val searchAdapterInterface : SearchAdapterInterface)
         }else{
             holder.bookAuthor.text = ""
         }
-        Picasso.get().load(currentItem.volumeInfo.imageLinks.getImage()).into(holder.bookImage)
+        val image = currentItem.volumeInfo.imageLinks.getImage()
+        if(image.isNotEmpty()){
+            Picasso.get().load(image).into(holder.bookImage)}
         //Glide.with(holder.itemView.context).load(currentItem.volumeInfo.imageLinks.image_url).into(holder.bookImage)
     }
 
@@ -62,10 +64,10 @@ class SearchViewHolder(view : View) : RecyclerView.ViewHolder(view){
     val bookName = view.findViewById<TextView>(R.id.bookName)
     val bookAuthor = view.findViewById<TextView>(R.id.bookAuthor)
     val bookImage = view.findViewById<ImageView>(R.id.bookImage)
-    val libraryButton = view.findViewById<Button>(R.id.libraryButton)
-    val addLaterButton = view.findViewById<Button>(R.id.addLaterButton)
+    val libraryButton = view.findViewById<ImageView>(R.id.libraryButton)
+    val addLaterButton = view.findViewById<ImageView>(R.id.addLaterButton)
     val favButton = view.findViewById<ImageView>(R.id.favButton)
-    val postButton = view.findViewById<Button>(R.id.postButton)
+    val postButton = view.findViewById<ImageView>(R.id.postButton)
 }
 
 interface SearchAdapterInterface {

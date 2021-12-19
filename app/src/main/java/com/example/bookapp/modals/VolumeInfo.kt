@@ -30,7 +30,7 @@ class VolumeInfo(
     val title: String = "",
     var favourite : Boolean = false,
     var readLater : Boolean = false,
-    var user : User? = User(),
+    var user : User? = User()
 ) : Parcelable{
     fun addUser(user: User?) {
         this.user = user

@@ -4,78 +4,106 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/edittext_round_shape"
     android:layout_margin="8dp"
     android:padding="8dp">
 
 
     <ImageView
+        android:padding="6dp"
         android:id="@+id/bookImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-    <TextView
-        android:id="@+id/bookName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="16dp"
-        android:text="Author"
-        android:textSize="24sp"
-        app:layout_constraintStart_toEndOf="@+id/bookImage"
-        app:layout_constraintTop_toBottomOf="@+id/bookAuthor" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
-    <TextView
-        android:id="@+id/bookAuthor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="24dp"
-        android:text="Book"
-        android:textSize="24sp"
-        app:layout_constraintStart_toEndOf="@+id/bookImage"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <Button
+        <TextView
+            android:id="@+id/bookName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Author"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="20sp"
+            tools:layout_editor_absoluteX="24dp"
+            tools:layout_editor_absoluteY="40dp" />
+
+        <TextView
+            android:id="@+id/bookAuthor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Book"
+            android:textSize="12sp"
+            tools:layout_editor_absoluteX="32dp"
+            tools:layout_editor_absoluteY="0dp" />
+
+
+
+    </LinearLayout>
+
+    <ImageView
         android:id="@+id/libraryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="16dp"
-        android:text="Add to Library"
-        android:textAllCaps="false"
-        app:layout_constraintStart_toEndOf="@+id/bookImage"
-        app:layout_constraintTop_toBottomOf="@+id/bookName" />
-
-    <Button
-        android:id="@+id/addLaterButton"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
+        android:layout_margin="12dp"
         android:layout_marginTop="12dp"
-        android:text="Read Later"
-        android:textAllCaps="false"
-        app:layout_constraintStart_toEndOf="@+id/bookImage"
-        app:layout_constraintTop_toBottomOf="@+id/libraryButton" />
+        android:src="@drawable/ic_baseline_menu_book_24"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toBottomOf="@+id/bookImage" />
+
+    <ImageView
+        android:id="@+id/addLaterButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/ic_baseline_bookmark_border_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.797"
+        app:layout_constraintStart_toEndOf="@+id/libraryButton"
+        app:layout_constraintTop_toBottomOf="@+id/bookImage" />
 
     <ImageView
         android:id="@+id/favButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
+        android:layout_marginTop="12dp"
         android:src="@drawable/ic_baseline_favorite_border_24"
-        app:layout_constraintBottom_toTopOf="@+id/postButton"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/libraryButton"
+        app:layout_constraintHorizontal_bias="0.418"
+        app:layout_constraintStart_toEndOf="@+id/postButton"
+        app:layout_constraintTop_toBottomOf="@+id/bookImage" />
 
-    <Button
+    <ImageView
         android:id="@+id/postButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
-        android:text="Post"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:src="@drawable/ic_baseline_post_add_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bookImage" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="183dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

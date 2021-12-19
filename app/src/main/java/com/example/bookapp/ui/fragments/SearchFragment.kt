@@ -1,11 +1,11 @@
 package com.example.bookapp.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -16,10 +16,13 @@ import com.example.bookapp.adapters.SearchAdapter
 import com.example.bookapp.adapters.SearchAdapterInterface
 import com.example.bookapp.dao.BookDao
 import com.example.bookapp.dao.UserDao
+import com.example.bookapp.dao.UserDetailsDao
 import com.example.bookapp.databinding.FragmentSearchBinding
-import com.example.bookapp.firebaseModals.BookFirebase
 import com.example.bookapp.firebaseModals.User
+import com.example.bookapp.firebaseModals.UserDetails
 import com.example.bookapp.modals.Item
+import com.example.bookapp.utils.LoadingDialog
+import com.example.bookapp.utils.Resource
 import com.example.bookapp.viewModels.BookViewModel
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,6 +31,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import android.app.Activity
+import android.app.AlertDialog
+import android.view.inputmethod.InputMethodManager
+
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() , SearchAdapterInterface{
@@ -37,6 +44,7 @@ class SearchFragment : Fragment() , SearchAdapterInterface{
     lateinit var mAdapter : SearchAdapter
     lateinit var bookDao: BookDao
     lateinit var userDao: UserDao
+    lateinit var userDetailsDao: UserDetailsDao
     lateinit var auth : FirebaseAuth
 
     override fun onCreateView(
@@ -51,19 +59,35 @@ class SearchFragment : Fragment() , SearchAdapterInterface{
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         setUpRecyclerView()
+        val builder = AlertDialog.Builder(requireActivity())
+        val inflater = activity?.layoutInflater
+        builder.setView(inflater?.inflate(R.layout.item_progress,null))
+        val alertDialog = builder.create()
 
         auth = FirebaseAuth.getInstance()
         userDao = UserDao()
         bookDao = BookDao()
+        userDetailsDao = UserDetailsDao()
 
         binding.searchButton.setOnClickListener {
             val name = binding.etBook.text.toString()
             viewModel.getNews(name)
+            hideKeyboard(requireActivity())
         }
 
-        viewModel.bookList.observe(viewLifecycleOwner , Observer { list ->
-            list?.let {
-                mAdapter.addAllItems(it)
+        viewModel.bookList.observe(viewLifecycleOwner , Observer { resource ->
+            when(resource) {
+                is Resource.Success -> {
+                    alertDialog.dismiss()
+                    resource.data?.let { mAdapter.addAllItems(it) }
+                }
+                is Resource.Error -> {
+                    alertDialog.dismiss()
+                    Log.d("aman raj devesh" , "${resource.msg}")
+                }
+                is Resource.Loading -> {
+                    alertDialog!!.show()
+                }
             }
         })
     }
@@ -74,6 +98,7 @@ class SearchFragment : Fragment() , SearchAdapterInterface{
         mAdapter = SearchAdapter(this)
         recyclerView.adapter = mAdapter
     }
+    
 
     override fun onLibraryButtonClicked(item: Item) {
         val book = item.volumeInfo
@@ -83,7 +108,9 @@ class SearchFragment : Fragment() , SearchAdapterInterface{
             withContext(Dispatchers.Main){
                 var x = user?.library
                 x = x?.plus(1)
-                userDao.updateLibrary(x)
+                if (x != null) {
+                    userDao.updateLibrary(x)
+                }
             }
         }
     }
@@ -103,13 +130,27 @@ class SearchFragment : Fragment() , SearchAdapterInterface{
             withContext(Dispatchers.Main){
                 var x = user?.favourites
                 x = x?.plus(1)
-                userDao.updateFavourite(x)
+                if (x != null) {
+                    userDao.updateFavourite(x)
+                }
             }
         }
     }
 
     override fun onPostButtonClicked(item: Item) {
         findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToPostFragment(item))
+    }
+
+    fun hideKeyboard(activity: Activity) {
+        val imm: InputMethodManager =
+            activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        //Find the currently focused view, so we can grab the correct window token from it.
+        var view = activity.currentFocus
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = View(activity)
+        }
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
 }

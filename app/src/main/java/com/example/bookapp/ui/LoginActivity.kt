@@ -18,20 +18,33 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import com.google.firebase.auth.AuthResult
+
+import androidx.annotation.NonNull
+import com.example.bookapp.utils.LoadingDialog
+
 
 class LoginActivity : AppCompatActivity() {
 
     lateinit var auth : FirebaseAuth
     lateinit var binding: ActivityLoginBinding
+    lateinit var loadingDialog: LoadingDialog
     companion object{
         private const val TAG = "LoginActivity"
         private const val RC_SIGN_IN = 32
     }
+    private var isNew : Boolean? = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this,R.layout.activity_login)
 
+        loadingDialog = LoadingDialog(this)
         auth = FirebaseAuth.getInstance()
         binding.loginButton.setOnClickListener {
             loginWithEmail()
@@ -71,6 +84,7 @@ class LoginActivity : AppCompatActivity() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 // Google Sign In was successful, authenticate with Firebase
+                loadingDialog.startLoading()
                 val account = task.getResult(ApiException::class.java)!!
                 Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
                 firebaseAuthWithGoogle(account.idToken!!)
@@ -88,6 +102,7 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithCredential:success")
+                    isNew = task.result.additionalUserInfo?.isNewUser
                     val user = auth.currentUser
                     updateUI(user)
                 } else {
@@ -103,10 +118,14 @@ class LoginActivity : AppCompatActivity() {
             Log.d(TAG , "User is null")
             return
         }else{
-            val user = User(firebaseUser.uid , firebaseUser.displayName.toString() , firebaseUser.photoUrl.toString())
             val userDao = UserDao()
-            userDao.addUser(user)
+            if(isNew==true){
+                val user = User(firebaseUser.uid,firebaseUser.displayName.toString(),firebaseUser.photoUrl.toString())
+                userDao.addUser(user)
+            }
+            //userDao.addUser(user)
             startActivity(Intent(this , MainActivity::class.java))
+            loadingDialog.stopLoading()
             finish()
         }
     }
