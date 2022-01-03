@@ -2,19 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/feedFragment"
+        android:id="@+id/feedFrag"
         android:title="@string/feed"
         android:icon="@drawable/ic_baseline_menu_book_24"/>
     <item
-        android:id="@+id/searchFragment"
+        android:id="@+id/searchFrag"
         android:title="@string/search"
         android:icon="@drawable/ic_baseline_search_24"/>
     <item
-        android:id="@+id/postFragment"
+        android:id="@+id/postBookFrag"
         android:title="@string/post"
         android:icon="@drawable/ic_baseline_add_24"/>
     <item
-        android:id="@+id/userFragment"
+        android:id="@+id/userFrag"
         android:title="@string/user"
         android:icon="@drawable/ic_baseline_person_24"/>
 </menu>

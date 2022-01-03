@@ -11,18 +11,22 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.bookapp.R
 import com.example.bookapp.adapters.LibraryAdapter
 import com.example.bookapp.adapters.OnLibClickListener
-import com.example.bookapp.databinding.FragmentLibraryBinding
 import com.example.bookapp.databinding.FragmentReadLaterBinding
 import com.example.bookapp.modals.VolumeInfo
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.google.firebase.FirebaseOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ReadLaterFragment : Fragment() , OnLibClickListener {
 
     lateinit var binding: FragmentReadLaterBinding
     lateinit var adapter: LibraryAdapter
+    @Inject
+    lateinit var auth : FirebaseAuth
+    @Inject lateinit var db : FirebaseFirestore
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,8 +39,8 @@ class ReadLaterFragment : Fragment() , OnLibClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        val auth = FirebaseAuth.getInstance()
-        val db = FirebaseFirestore.getInstance()
+        //val auth = FirebaseAuth.getInstance()
+        //val db = FirebaseFirestore.getInstance()
         val bookCollection = db.collection("books")
         val query = bookCollection.whereEqualTo("user.uid",auth.currentUser!!.uid.toString())
             .whereEqualTo("readLater" , true)

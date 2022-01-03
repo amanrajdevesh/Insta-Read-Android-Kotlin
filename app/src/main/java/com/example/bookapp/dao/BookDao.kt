@@ -1,8 +1,6 @@
 package com.example.bookapp.dao
 
-import com.example.bookapp.firebaseModals.BookFirebase
 import com.example.bookapp.firebaseModals.User
-import com.example.bookapp.modals.Book
 import com.example.bookapp.modals.VolumeInfo
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -10,8 +8,9 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-class BookDao {
+class BookDao @Inject constructor() {
 
     private val db = FirebaseFirestore.getInstance()
     private val bookCollection = db.collection("books")

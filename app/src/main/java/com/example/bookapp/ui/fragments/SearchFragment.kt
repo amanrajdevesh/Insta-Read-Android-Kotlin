@@ -3,9 +3,6 @@ package com.example.bookapp.ui.fragments
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -19,9 +16,7 @@ import com.example.bookapp.dao.UserDao
 import com.example.bookapp.dao.UserDetailsDao
 import com.example.bookapp.databinding.FragmentSearchBinding
 import com.example.bookapp.firebaseModals.User
-import com.example.bookapp.firebaseModals.UserDetails
 import com.example.bookapp.modals.Item
-import com.example.bookapp.utils.LoadingDialog
 import com.example.bookapp.utils.Resource
 import com.example.bookapp.viewModels.BookViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -33,7 +28,11 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import android.app.Activity
 import android.app.AlertDialog
+import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -42,9 +41,10 @@ class SearchFragment : Fragment() , SearchAdapterInterface{
     lateinit var binding: FragmentSearchBinding
     private val viewModel : BookViewModel by viewModels()
     lateinit var mAdapter : SearchAdapter
-    lateinit var bookDao: BookDao
-    lateinit var userDao: UserDao
-    lateinit var userDetailsDao: UserDetailsDao
+    @Inject lateinit var bookDao: BookDao
+    @Inject lateinit var userDao: UserDao
+    @Inject lateinit var userDetailsDao: UserDetailsDao
+    @Inject
     lateinit var auth : FirebaseAuth
 
     override fun onCreateView(
@@ -53,6 +53,15 @@ class SearchFragment : Fragment() , SearchAdapterInterface{
     ): View? {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater , R.layout.fragment_search , container , false)
+        setHasOptionsMenu(true)
+       // binding.searchToolbar.inflateMenu(R.menu.search_menu)
+        //binding.searchToolbar.setOnMenuItemClickListener {
+          //  if(it.itemId==R.id.searchApi){
+            //    Toast.makeText(activity,"Search",Toast.LENGTH_SHORT).show()
+           // }
+            //true
+        //}
+        //setSupportActionBar(binding.searchToolbar)
         return binding.root
     }
 
@@ -63,11 +72,10 @@ class SearchFragment : Fragment() , SearchAdapterInterface{
         val inflater = activity?.layoutInflater
         builder.setView(inflater?.inflate(R.layout.item_progress,null))
         val alertDialog = builder.create()
-
-        auth = FirebaseAuth.getInstance()
-        userDao = UserDao()
-        bookDao = BookDao()
-        userDetailsDao = UserDetailsDao()
+        //auth = FirebaseAuth.getInstance()
+        //userDao = UserDao()
+        //bookDao = BookDao()
+        //userDetailsDao = UserDetailsDao()
 
         binding.searchButton.setOnClickListener {
             val name = binding.etBook.text.toString()
@@ -137,11 +145,27 @@ class SearchFragment : Fragment() , SearchAdapterInterface{
         }
     }
 
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.search_menu,menu)
+        if (menu != null) {
+            menu.removeItem(R.id.logout);
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.searchApi -> Toast.makeText(activity,"Search",Toast.LENGTH_SHORT).show()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+
     override fun onPostButtonClicked(item: Item) {
         findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToPostFragment(item))
     }
 
-    fun hideKeyboard(activity: Activity) {
+    private fun hideKeyboard(activity: Activity) {
         val imm: InputMethodManager =
             activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         //Find the currently focused view, so we can grab the correct window token from it.

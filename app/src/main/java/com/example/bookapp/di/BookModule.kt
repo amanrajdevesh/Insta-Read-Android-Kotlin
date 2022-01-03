@@ -1,6 +1,8 @@
 package com.example.bookapp.di
 
 import com.example.bookapp.network.BookService
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,5 +43,13 @@ object BookModule {
     @Provides
     @Singleton
     fun provideBookService(retrofit: Retrofit) : BookService = retrofit.create(BookService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideAuth() : FirebaseAuth = FirebaseAuth.getInstance()
+
+    @Provides
+    @Singleton
+    fun provideDatabase() : FirebaseFirestore = FirebaseFirestore.getInstance()
 
 }

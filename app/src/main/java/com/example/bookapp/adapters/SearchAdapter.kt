@@ -3,11 +3,9 @@ package com.example.bookapp.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.bookapp.R
 import com.example.bookapp.modals.Item
 import com.squareup.picasso.Picasso

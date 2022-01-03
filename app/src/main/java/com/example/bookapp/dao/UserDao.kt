@@ -11,8 +11,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-class UserDao {
+class UserDao @Inject constructor(){
 
     private val db = FirebaseFirestore.getInstance()
     private val userCollection = db.collection("users")

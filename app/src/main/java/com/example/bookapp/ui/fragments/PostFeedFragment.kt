@@ -6,33 +6,31 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.bookapp.R
-import com.example.bookapp.adapters.BottomSheetRecyclerAdapter
-import com.example.bookapp.adapters.LibraryAdapter
-import com.example.bookapp.adapters.PostAdapter
+import com.example.bookapp.adapters.OnPostClickedListener
 import com.example.bookapp.adapters.PostFeedAdapter
-import com.example.bookapp.dao.BookDao
-import com.example.bookapp.databinding.FragmentLibraryBinding
 import com.example.bookapp.databinding.FragmentPostFeedBinding
 import com.example.bookapp.firebaseModals.Post
-import com.example.bookapp.modals.VolumeInfo
 import com.example.bookapp.viewModels.BookSharedViewModel
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class PostFeedFragment : Fragment() {
+@AndroidEntryPoint
+class PostFeedFragment : Fragment(), OnPostClickedListener {
 
     private lateinit var adapter : PostFeedAdapter
     lateinit var binding : FragmentPostFeedBinding
-    lateinit var viewModel: BookSharedViewModel
+//    lateinit var viewModel: BookSharedViewModel
+    private val viewModel: BookSharedViewModel by activityViewModels()
+    @Inject lateinit var db : FirebaseFirestore
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,9 +43,9 @@ class PostFeedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setUpRecyclerView()
-        val db = FirebaseFirestore.getInstance()
+        //val db = FirebaseFirestore.getInstance()
         val postCollection = db.collection("posts")
-        viewModel = ViewModelProvider(requireActivity()).get(BookSharedViewModel::class.java)
+       // viewModel = ViewModelProvider(requireActivity()).get(BookSharedViewModel::class.java)
         viewModel.post.observe(viewLifecycleOwner, Observer {
             val uid = it.user.uid
             val query = postCollection.orderBy("createdAt", Query.Direction.DESCENDING)
@@ -70,8 +68,12 @@ class PostFeedFragment : Fragment() {
     }
 
     private fun setUpRecyclerView() {
-        adapter = PostFeedAdapter()
+        adapter = PostFeedAdapter(this)
         binding.userPostRecycler.layoutManager = LinearLayoutManager(activity)
         binding.userPostRecycler.adapter = adapter
+    }
+
+    override fun onPostClicked(post: Post) {
+
     }
 }

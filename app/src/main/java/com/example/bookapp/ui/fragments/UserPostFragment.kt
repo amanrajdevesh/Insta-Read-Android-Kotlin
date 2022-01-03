@@ -18,12 +18,16 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class UserPostFragment : Fragment() {
+@AndroidEntryPoint
+class UserPostFragment : Fragment(), OnPostClickedListener {
 
     lateinit var binding : FragmentUserPostBinding
     lateinit var adapter : PostFeedAdapter
-    lateinit var auth: FirebaseAuth
+    @Inject lateinit var auth: FirebaseAuth
+    @Inject lateinit var db : FirebaseFirestore
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,8 +40,8 @@ class UserPostFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setUpRecyclerView()
-        val db = FirebaseFirestore.getInstance()
-        auth = FirebaseAuth.getInstance()
+        //db = FirebaseFirestore.getInstance()
+        //auth = FirebaseAuth.getInstance()
         val postCollection = db.collection("posts")
         val query = postCollection.orderBy("createdAt", Query.Direction.DESCENDING).whereEqualTo("user.uid",auth.currentUser!!.uid)
         query.addSnapshotListener { value, e ->
@@ -59,9 +63,13 @@ class UserPostFragment : Fragment() {
     }
 
     private fun setUpRecyclerView() {
-        adapter = PostFeedAdapter()
+        adapter = PostFeedAdapter(this)
         binding.userPostRecycler.layoutManager = LinearLayoutManager(activity)
         binding.userPostRecycler.adapter = adapter
+    }
+
+    override fun onPostClicked(post: Post) {
+
     }
 
 }

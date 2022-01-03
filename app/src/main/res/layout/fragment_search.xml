@@ -7,6 +7,7 @@
         android:layout_height="match_parent"
         tools:context=".ui.fragments.FeedFragment">
 
+
         <EditText
             android:id="@+id/etBook"
             android:layout_width="match_parent"

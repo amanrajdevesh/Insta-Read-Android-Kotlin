@@ -1,41 +1,37 @@
 package com.example.bookapp.ui.fragments
 
-import android.app.Dialog
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.*
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bookapp.R
 import com.example.bookapp.adapters.LibraryAdapter
 import com.example.bookapp.adapters.OnLibClickListener
-import com.example.bookapp.adapters.SearchAdapter
 import com.example.bookapp.dao.BookDao
-import com.example.bookapp.dao.PostDao
 import com.example.bookapp.databinding.FragmentLibraryBinding
 import com.example.bookapp.modals.VolumeInfo
 import com.example.bookapp.viewModels.BookSharedViewModel
-import com.example.bookapp.viewModels.BookViewModel
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class LibraryFragment : Fragment() , OnLibClickListener {
 
     private lateinit var adapter : LibraryAdapter
     lateinit var binding : FragmentLibraryBinding
-    lateinit var auth: FirebaseAuth
-    lateinit var bookDao: BookDao
-    lateinit var viewModel: BookSharedViewModel
+    @Inject lateinit var auth: FirebaseAuth
+    @Inject lateinit var bookDao: BookDao
+    @Inject lateinit var db : FirebaseFirestore
+    private val viewModel: BookSharedViewModel by activityViewModels()
+    //lateinit var viewModel: BookSharedViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,10 +44,10 @@ class LibraryFragment : Fragment() , OnLibClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        auth = FirebaseAuth.getInstance()
-        val db = FirebaseFirestore.getInstance()
-        bookDao = BookDao()
-        viewModel = ViewModelProvider(requireActivity()).get(BookSharedViewModel::class.java)
+        //auth = FirebaseAuth.getInstance()
+        //val db = FirebaseFirestore.getInstance()
+        //bookDao = BookDao()
+        //viewModel = ViewModelProvider(requireActivity()).get(BookSharedViewModel::class.java)
 
         val bookCollection = db.collection("books")
         val query = bookCollection.whereEqualTo("user.uid" , auth.currentUser!!.uid.toString())

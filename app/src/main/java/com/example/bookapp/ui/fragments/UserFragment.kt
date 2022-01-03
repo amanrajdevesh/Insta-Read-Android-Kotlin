@@ -1,21 +1,18 @@
 package com.example.bookapp.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.NavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.bookapp.R
 import com.example.bookapp.adapters.FavAdapter
-import com.example.bookapp.adapters.LibraryAdapter
+import com.example.bookapp.adapters.FavouriteAdapter
 import com.example.bookapp.adapters.UserViewPagerAdapter
 import com.example.bookapp.dao.UserDao
-import com.example.bookapp.databinding.FragmentSearchBinding
 import com.example.bookapp.databinding.FragmentUserBinding
 import com.example.bookapp.firebaseModals.User
 import com.example.bookapp.modals.VolumeInfo
@@ -24,16 +21,18 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
+@AndroidEntryPoint
 class UserFragment : Fragment() {
 
     lateinit var binding: FragmentUserBinding
-    lateinit var adapter: FavAdapter
+    lateinit var adapter: FavouriteAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,11 +60,24 @@ class UserFragment : Fragment() {
         val auth = FirebaseAuth.getInstance()
         val db = FirebaseFirestore.getInstance()
         val bookCollection = db.collection("books")
-        val query = bookCollection.whereEqualTo("user.uid",auth.currentUser!!.uid.toString())
+        val query = bookCollection.whereEqualTo("user.uid",auth.currentUser!!.uid)
             .whereEqualTo("favourite",true)
-        val option = FirestoreRecyclerOptions.Builder<VolumeInfo>().setQuery(query,VolumeInfo::class.java).build()
+        query.addSnapshotListener { value, e ->
+            if (e != null) {
+                Log.w("Aman", "Listen failed.", e)
+                return@addSnapshotListener
+            }
 
-        adapter = FavAdapter(option)
+            val book = ArrayList<VolumeInfo>()
+            for (doc in value!!) {
+                doc.toObject(VolumeInfo::class.java)?.let { volume ->
+                    book.add(volume)
+                }
+            }
+            adapter.addAllFav(book)
+        }
+
+        adapter = FavouriteAdapter()
         binding.recyclerView2.layoutManager = LinearLayoutManager(activity,LinearLayoutManager.HORIZONTAL,false)
         binding.recyclerView2.adapter = adapter
 
@@ -81,15 +93,4 @@ class UserFragment : Fragment() {
             }
         }
     }
-
-    override fun onStart() {
-        super.onStart()
-        adapter.startListening()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        adapter.stopListening()
-    }
-
 }

@@ -20,7 +20,7 @@ class PostAdapter(private val options: FirestoreRecyclerOptions<Post>, val liste
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val viewHolder = PostViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_post, parent, false))
         viewHolder.postUserImage.setOnClickListener {
-            listener.onPostClicked(snapshots.getSnapshot(viewHolder.adapterPosition).id)
+           // listener.onPostClicked(snapshots.getSnapshot(viewHolder.adapterPosition).id)
         }
         return viewHolder
     }
@@ -57,7 +57,9 @@ class PostViewHolder(view : View) : RecyclerView.ViewHolder(view) {
     val userAuthor = view.findViewById<TextView>(R.id.tvUserAuthor)
     val userThoughts = view.findViewById<TextView>(R.id.userThoughts)
 }
-
+/*
 interface OnPostClickedListener{
     fun onPostClicked(postId : String)
 }
+
+ */

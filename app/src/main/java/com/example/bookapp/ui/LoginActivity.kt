@@ -27,11 +27,14 @@ import com.google.firebase.auth.AuthResult
 
 import androidx.annotation.NonNull
 import com.example.bookapp.utils.LoadingDialog
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
-    lateinit var auth : FirebaseAuth
+    @Inject lateinit var auth : FirebaseAuth
+    @Inject lateinit var userDao: UserDao
     lateinit var binding: ActivityLoginBinding
     lateinit var loadingDialog: LoadingDialog
     companion object{
@@ -45,7 +48,7 @@ class LoginActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this,R.layout.activity_login)
 
         loadingDialog = LoadingDialog(this)
-        auth = FirebaseAuth.getInstance()
+        //auth = FirebaseAuth.getInstance()
         binding.loginButton.setOnClickListener {
             loginWithEmail()
         }
@@ -118,7 +121,7 @@ class LoginActivity : AppCompatActivity() {
             Log.d(TAG , "User is null")
             return
         }else{
-            val userDao = UserDao()
+            //val userDao = UserDao()
             if(isNew==true){
                 val user = User(firebaseUser.uid,firebaseUser.displayName.toString(),firebaseUser.photoUrl.toString())
                 userDao.addUser(user)

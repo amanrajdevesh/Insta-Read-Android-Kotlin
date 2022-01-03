@@ -9,15 +9,20 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bookapp.R
 import com.example.bookapp.firebaseModals.Post
+import com.example.bookapp.modals.VolumeInfo
 import com.squareup.picasso.Picasso
 
-class PostFeedAdapter : RecyclerView.Adapter<PostFeedHolder>() {
+class PostFeedAdapter(val listener: OnPostClickedListener) : RecyclerView.Adapter<PostFeedHolder>() {
 
     private val postList = ArrayList<Post>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostFeedHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_post, parent, false)
-        return PostFeedHolder(view)
+        val holder = PostFeedHolder(view)
+        holder.postUserImage.setOnClickListener {
+            listener.onPostClicked(postList[holder.adapterPosition])
+        }
+        return holder
     }
 
     override fun onBindViewHolder(holder: PostFeedHolder, position: Int) {
@@ -31,7 +36,7 @@ class PostFeedAdapter : RecyclerView.Adapter<PostFeedHolder>() {
                 Picasso.get().load(post.imageUrl).into(holder.userBookImage)
             }
             Picasso.get().load(post.user.imageUrl).into(holder.postUserImage)
-            holder.postUserImage.visibility = View.GONE
+            //holder.postUserImage.visibility = View.GONE
             if(TextUtils.isEmpty(post.body)){
                 holder.userThoughts.visibility = View.GONE
             }
@@ -63,4 +68,8 @@ class PostFeedHolder(view : View) : RecyclerView.ViewHolder(view){
     val userTitle = view.findViewById<TextView>(R.id.tvUserTitle)
     val userAuthor = view.findViewById<TextView>(R.id.tvUserAuthor)
     val userThoughts = view.findViewById<TextView>(R.id.userThoughts)
+}
+
+interface OnPostClickedListener{
+    fun onPostClicked(post : Post)
 }
