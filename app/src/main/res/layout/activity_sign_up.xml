@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.SignUpActivity">
 
-
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"

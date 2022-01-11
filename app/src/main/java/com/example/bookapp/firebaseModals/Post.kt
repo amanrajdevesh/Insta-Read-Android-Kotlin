@@ -7,9 +7,20 @@ class Post(val name : String = "",
            val body : String = "",
            val read : String = "",
            val createdAt : Long = 0L,
-           var user: User = User()
+          var uid : String = ""
+           //var user: User = User()
 ){
+
+    fun addUserUid(uid : String) {
+        this.uid = uid
+    }
+
+    /*
     fun addUser(user: User) {
         this.user = user
     }
+
+     */
+
+
 }

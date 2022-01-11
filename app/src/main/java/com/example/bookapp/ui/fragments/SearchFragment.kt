@@ -32,6 +32,8 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.activityViewModels
+import com.example.bookapp.viewModels.BookSharedViewModel
 import javax.inject.Inject
 
 
@@ -46,6 +48,7 @@ class SearchFragment : Fragment() , SearchAdapterInterface{
     @Inject lateinit var userDetailsDao: UserDetailsDao
     @Inject
     lateinit var auth : FirebaseAuth
+    private val mViewModel: BookSharedViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,6 +57,7 @@ class SearchFragment : Fragment() , SearchAdapterInterface{
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater , R.layout.fragment_search , container , false)
         setHasOptionsMenu(true)
+        //binding.standard.appBar.visibility = View.GONE
        // binding.searchToolbar.inflateMenu(R.menu.search_menu)
         //binding.searchToolbar.setOnMenuItemClickListener {
           //  if(it.itemId==R.id.searchApi){
@@ -77,11 +81,20 @@ class SearchFragment : Fragment() , SearchAdapterInterface{
         //bookDao = BookDao()
         //userDetailsDao = UserDetailsDao()
 
-        binding.searchButton.setOnClickListener {
-            val name = binding.etBook.text.toString()
-            viewModel.getNews(name)
-            hideKeyboard(requireActivity())
+        binding.standard.ivSearchIcon.setOnClickListener {
+            val fragment = SearchBookFragment()
+            setCurrentFragment(fragment)
         }
+
+//        binding.searchButton.setOnClickListener {
+//            val name = binding.etBook.text.toString()
+//            viewModel.getNews(name)
+//            hideKeyboard(requireActivity())
+//        }
+
+        mViewModel.item.observe(viewLifecycleOwner, Observer {
+            viewModel.getNews(it.volumeInfo.title)
+        })
 
         viewModel.bookList.observe(viewLifecycleOwner , Observer { resource ->
             when(resource) {
@@ -146,35 +159,47 @@ class SearchFragment : Fragment() , SearchAdapterInterface{
     }
 
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.search_menu,menu)
-        if (menu != null) {
-            menu.removeItem(R.id.logout);
-        }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.searchApi -> Toast.makeText(activity,"Search",Toast.LENGTH_SHORT).show()
-        }
-        return super.onOptionsItemSelected(item)
-    }
+//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+//        inflater.inflate(R.menu.search_menu,menu)
+//        if (menu != null) {
+//            menu.removeItem(R.id.logout);
+//        }
+//    }
+//
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        when(item.itemId){
+//            R.id.searchApi -> Toast.makeText(activity,"Search",Toast.LENGTH_SHORT).show()
+//        }
+//        return super.onOptionsItemSelected(item)
+//    }
 
 
     override fun onPostButtonClicked(item: Item) {
         findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToPostFragment(item))
     }
 
-    private fun hideKeyboard(activity: Activity) {
-        val imm: InputMethodManager =
-            activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        //Find the currently focused view, so we can grab the correct window token from it.
-        var view = activity.currentFocus
-        //If no view currently has focus, create a new one, just so we can grab a window token from it
-        if (view == null) {
-            view = View(activity)
+
+    override fun onResume() {
+        super.onResume()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
+    }
+
+    private fun setCurrentFragment(fragment : Fragment){
+        val backStateName: String = fragment.javaClass.name
+        val manager = activity?.supportFragmentManager
+        val fragmentPopped = manager?.popBackStackImmediate(backStateName, 0)
+        if(!fragmentPopped!!){
+            manager.beginTransaction().apply {
+                replace(R.id.container,fragment)
+                addToBackStack(backStateName)
+                commit()
+            }
         }
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
 }

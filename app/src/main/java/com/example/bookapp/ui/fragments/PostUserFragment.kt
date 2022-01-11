@@ -15,7 +15,9 @@ import com.example.bookapp.R
 import com.example.bookapp.adapters.BottomSheetRecyclerAdapter
 import com.example.bookapp.adapters.FavouriteAdapter
 import com.example.bookapp.adapters.UserViewPagerAdapter
+import com.example.bookapp.dao.UserDao
 import com.example.bookapp.databinding.FragmentPostUserBinding
+import com.example.bookapp.firebaseModals.User
 import com.example.bookapp.modals.VolumeInfo
 import com.example.bookapp.viewModels.BookSharedViewModel
 import com.google.android.material.tabs.TabLayoutMediator
@@ -33,6 +35,8 @@ class PostUserFragment : Fragment() {
     private val viewModel: BookSharedViewModel by activityViewModels()
     @Inject
     lateinit var db : FirebaseFirestore
+    @Inject lateinit var userDao: UserDao
+    lateinit var user : User
 
 
     override fun onCreateView(
@@ -64,13 +68,18 @@ class PostUserFragment : Fragment() {
         //viewModel = ViewModelProvider(requireActivity()).get(BookSharedViewModel::class.java)
         viewModel.post.observe(viewLifecycleOwner , Observer {
             binding.apply {
-                userName.text = it.user.name
-                userPost.text = it.user.post.toString()
-                userFav.text = it.user.favourites.toString()
-                userLib.text = it.user.library.toString()
-                Picasso.get().load(it.user.imageUrl).into(userImage)
+                userDao.getUser(it.uid).addOnSuccessListener {  document ->
+                    if(document!=null){
+                        user = document.toObject(User::class.java)!!
+                    }
+                }
+                userName.text = user.name
+                userPost.text = user.post.toString()
+                userFav.text = user.favourites.toString()
+                userLib.text = user.library.toString()
+                Picasso.get().load(user.imageUrl).into(userImage)
             }
-            val query = bookCollection.whereEqualTo("user.uid",it.user.uid)
+            val query = bookCollection.whereEqualTo("user.uid",it.uid)
                 .whereEqualTo("favourite",true)
             query.addSnapshotListener { value, e ->
                 if (e != null) {

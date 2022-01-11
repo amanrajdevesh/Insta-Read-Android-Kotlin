@@ -141,7 +141,8 @@
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
-                android:background="@color/colorPrimary"
+                android:background="@color/white"
+                app:tabTextColor="@color/black"
                 app:layout_constraintTop_toTopOf="@+id/guideline2"
                 app:tabGravity="fill"
                 app:tabMode="scrollable">

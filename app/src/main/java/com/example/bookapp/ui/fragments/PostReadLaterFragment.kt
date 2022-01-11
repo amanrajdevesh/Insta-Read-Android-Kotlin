@@ -46,7 +46,7 @@ class PostReadLaterFragment : Fragment() {
         val bookCollection = db.collection("books")
         //viewModel = ViewModelProvider(requireActivity()).get(BookSharedViewModel::class.java)
         viewModel.post.observe(viewLifecycleOwner, Observer {
-            val uid = it.user.uid
+            val uid = it.uid
             val query = bookCollection.whereEqualTo("user.uid" , uid)
                 .whereEqualTo("readLater" , true)
             query.addSnapshotListener { value, e ->

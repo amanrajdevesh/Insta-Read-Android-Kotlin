@@ -21,9 +21,9 @@ class PostDao @Inject constructor() {
 
     fun addPost(post: Post){
         CoroutineScope(Dispatchers.IO).launch {
-            val userDao = UserDao()
-            val user = userDao.getUser(auth.currentUser!!.uid).await().toObject(User::class.java)!!
-            post.addUser(user)
+            //val userDao = UserDao()
+            //val user = userDao.getUser(auth.currentUser!!.uid).await().toObject(User::class.java)!!
+            post.addUserUid(auth.currentUser!!.uid)
             postCollection.document().set(post)
         }
     }

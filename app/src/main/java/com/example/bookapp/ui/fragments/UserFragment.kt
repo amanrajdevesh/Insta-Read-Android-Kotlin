@@ -2,10 +2,8 @@ package com.example.bookapp.ui.fragments
 
 import android.os.Bundle
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bookapp.R
@@ -40,6 +38,7 @@ class UserFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_user,container,false)
+        setHasOptionsMenu(true)
         return binding.root
     }
 
@@ -90,6 +89,35 @@ class UserFragment : Fragment() {
                 binding.userPost.text = user?.post.toString()
                 binding.userFav.text = user?.favourites.toString()
                 binding.userLib.text = user?.library.toString()
+            }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.edit_menu,menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.edit ->{
+                val fragment = EditUserFragment()
+                setCurrentFragment(fragment)
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun setCurrentFragment(fragment : Fragment){
+        val backStateName: String = fragment.javaClass.name
+        val manager = activity?.supportFragmentManager
+        val fragmentPopped = manager?.popBackStackImmediate(backStateName, 0)
+        if(!fragmentPopped!!){
+            manager.beginTransaction().apply {
+                replace(R.id.container,fragment)
+                addToBackStack(backStateName)
+                commit()
             }
         }
     }

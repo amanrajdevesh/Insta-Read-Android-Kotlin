@@ -47,7 +47,7 @@ class PostLibraryFragment : Fragment() {
         val bookCollection = db.collection("books")
         //viewModel = ViewModelProvider(requireActivity()).get(BookSharedViewModel::class.java)
         viewModel.post.observe(viewLifecycleOwner, Observer {
-            val uid = it.user.uid
+            val uid = it.uid
             val query = bookCollection.whereEqualTo("user.uid" , uid)
                 .whereEqualTo("readLater" , false)
             query.addSnapshotListener { value, e ->
@@ -65,6 +65,7 @@ class PostLibraryFragment : Fragment() {
                 adapter.addAllItems(book)
             }
         })
+
     }
 
     private fun setUpRecyclerView() {

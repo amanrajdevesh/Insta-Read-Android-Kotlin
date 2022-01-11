@@ -17,6 +17,8 @@ import com.squareup.picasso.Picasso
 import android.util.Log
 import androidx.fragment.app.activityViewModels
 import com.example.bookapp.adapters.BottomSheetRecyclerAdapter
+import com.example.bookapp.dao.UserDao
+import com.example.bookapp.firebaseModals.User
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -31,6 +33,8 @@ class UserBottomSheetDialog : BottomSheetDialogFragment() {
     lateinit var adapter: BottomSheetRecyclerAdapter
     @Inject
     lateinit var db : FirebaseFirestore
+    @Inject lateinit var userDao: UserDao
+    lateinit var user: User
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,13 +53,18 @@ class UserBottomSheetDialog : BottomSheetDialogFragment() {
         setUpRecyclerView()
         //viewModel = ViewModelProvider(requireActivity()).get(BookSharedViewModel::class.java)
         viewModel.post.observe(viewLifecycleOwner, Observer {
-            binding.userDialogName.text = it.user.name
-            binding.userPost.text = it.user.post.toString()
-            binding.userLib.text = it.user.library.toString()
-            binding.userFav.text = it.user.favourites.toString()
-            Picasso.get().load(it.user.imageUrl).into(binding.userDialogImage)
+            userDao.getUser(it.uid).addOnSuccessListener {  document ->
+                if(document!=null){
+                    user = document.toObject(User::class.java)!!
+                }
+            }
+            binding.userDialogName.text = user.name
+            binding.userPost.text = user.post.toString()
+            binding.userLib.text = user.library.toString()
+            binding.userFav.text = user.favourites.toString()
+            Picasso.get().load(user.imageUrl).into(binding.userDialogImage)
 
-            val query = bookCollection.whereEqualTo("user.uid",it.user.uid)
+            val query = bookCollection.whereEqualTo("user.uid",user.uid)
                 .whereEqualTo("favourite",true)
             query.addSnapshotListener { value, e ->
                 if (e != null) {

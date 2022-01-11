@@ -22,10 +22,7 @@ import com.bumptech.glide.Glide
 import com.example.bookapp.R
 import com.example.bookapp.databinding.ActivityMainBinding
 import com.example.bookapp.network.BookService
-import com.example.bookapp.ui.fragments.FeedFragment
-import com.example.bookapp.ui.fragments.PostBookFragment
-import com.example.bookapp.ui.fragments.SearchFragment
-import com.example.bookapp.ui.fragments.UserFragment
+import com.example.bookapp.ui.fragments.*
 import com.example.bookapp.viewModels.BookViewModel
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -43,7 +40,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var drawerLayout: DrawerLayout
     @Inject lateinit var auth : FirebaseAuth
     private lateinit var feedFragment : FeedFragment
-    private lateinit var searchFragment : SearchFragment
+    private lateinit var searchFragment : BookSearchFragment
     private lateinit var postBookFragment : PostBookFragment
     private lateinit var userFragment : UserFragment
 
@@ -69,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         drawerLayout = binding.drawerLayout
 
         feedFragment = FeedFragment()
-        searchFragment = SearchFragment()
+        searchFragment = BookSearchFragment()
         postBookFragment = PostBookFragment()
         userFragment = UserFragment()
 
