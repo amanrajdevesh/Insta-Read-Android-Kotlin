@@ -7,20 +7,18 @@ class Post(val name : String = "",
            val body : String = "",
            val read : String = "",
            val createdAt : Long = 0L,
-          var uid : String = ""
-           //var user: User = User()
+           var user: User = User(),
+           val identifier : String = "",
+           var postId : String = "",
+           val liked : ArrayList<String> = ArrayList()
 ){
 
-    fun addUserUid(uid : String) {
-        this.uid = uid
-    }
-
-    /*
     fun addUser(user: User) {
         this.user = user
     }
 
-     */
-
+    fun addPostId(str : String) {
+        this.postId = str
+    }
 
 }

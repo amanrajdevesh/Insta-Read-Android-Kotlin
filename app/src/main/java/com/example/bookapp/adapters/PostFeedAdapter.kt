@@ -6,17 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bookapp.R
 import com.example.bookapp.firebaseModals.Post
 import com.example.bookapp.modals.VolumeInfo
 import com.example.bookapp.utils.Utils
+import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 
 class PostFeedAdapter(val listener: OnPostClickedListener) : RecyclerView.Adapter<PostFeedHolder>() {
 
     private val postList = ArrayList<Post>()
-    val utils = Utils()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostFeedHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_post, parent, false)
@@ -24,13 +25,15 @@ class PostFeedAdapter(val listener: OnPostClickedListener) : RecyclerView.Adapte
         holder.postUserImage.setOnClickListener {
             listener.onPostClicked(postList[holder.adapterPosition])
         }
+        holder.likeButton.setOnClickListener {
+            listener.onLikedClicked(postList[holder.adapterPosition])
+        }
         return holder
     }
 
     override fun onBindViewHolder(holder: PostFeedHolder, position: Int) {
             val post = postList[position]
-            val user = utils.getUser(post.uid)
-            holder.postUser.text = user.name
+            holder.postUser.text = post.user.name
             holder.postRead.text = post.read
             holder.userTitle.text = post.name
             holder.userAuthor.text = post.author
@@ -38,10 +41,19 @@ class PostFeedAdapter(val listener: OnPostClickedListener) : RecyclerView.Adapte
             if(!TextUtils.isEmpty(post.imageUrl)){
                 Picasso.get().load(post.imageUrl).into(holder.userBookImage)
             }
-            Picasso.get().load(user.imageUrl).into(holder.postUserImage)
+            if(!TextUtils.isEmpty(post.user.imageUrl)){
+                Picasso.get().load(post.user.imageUrl).into(holder.postUserImage)}
             //holder.postUserImage.visibility = View.GONE
             if(TextUtils.isEmpty(post.body)){
                 holder.userThoughts.visibility = View.GONE
+            }
+            holder.likesCount.text = post.liked.size.toString()
+            val auth = FirebaseAuth.getInstance()
+            val isLiked = post.liked.contains(auth.currentUser!!.uid)
+            if(isLiked) {
+                holder.likeButton.setImageDrawable(ContextCompat.getDrawable(holder.likeButton.context, R.drawable.ic_liked))
+            } else {
+                holder.likeButton.setImageDrawable(ContextCompat.getDrawable(holder.likeButton.context, R.drawable.ic_unliked))
             }
         }
 
@@ -65,8 +77,11 @@ class PostFeedHolder(view : View) : RecyclerView.ViewHolder(view){
     val userTitle = view.findViewById<TextView>(R.id.tvUserTitle)
     val userAuthor = view.findViewById<TextView>(R.id.tvUserAuthor)
     val userThoughts = view.findViewById<TextView>(R.id.userThoughts)
+    val likeButton = view.findViewById<ImageView>(R.id.liked)
+    val likesCount = view.findViewById<TextView>(R.id.likecount)
 }
 
 interface OnPostClickedListener{
     fun onPostClicked(post : Post)
+    fun onLikedClicked(post: Post)
 }

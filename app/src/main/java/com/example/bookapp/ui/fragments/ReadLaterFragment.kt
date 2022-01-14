@@ -1,11 +1,13 @@
 package com.example.bookapp.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bookapp.R
@@ -13,6 +15,7 @@ import com.example.bookapp.adapters.LibraryAdapter
 import com.example.bookapp.adapters.OnLibClickListener
 import com.example.bookapp.databinding.FragmentReadLaterBinding
 import com.example.bookapp.modals.VolumeInfo
+import com.example.bookapp.viewModels.BookSharedViewModel
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -27,6 +30,7 @@ class ReadLaterFragment : Fragment() , OnLibClickListener {
     @Inject
     lateinit var auth : FirebaseAuth
     @Inject lateinit var db : FirebaseFirestore
+    private val viewModel: BookSharedViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,25 +48,31 @@ class ReadLaterFragment : Fragment() , OnLibClickListener {
         val bookCollection = db.collection("books")
         val query = bookCollection.whereEqualTo("user.uid",auth.currentUser!!.uid.toString())
             .whereEqualTo("readLater" , true)
-        val option = FirestoreRecyclerOptions.Builder<VolumeInfo>().setQuery(query , VolumeInfo::class.java).build()
+        query.addSnapshotListener { value, e ->
+            if (e != null) {
+                Log.w("Aman", "Listen failed.", e)
+                return@addSnapshotListener
+            }
 
-        adapter = LibraryAdapter(option,this)
+            val volumeInfo = ArrayList<VolumeInfo>()
+            for (doc in value!!) {
+                doc.toObject(VolumeInfo::class.java)?.let { p ->
+                    volumeInfo.add(p)
+                }
+            }
+            adapter.addAllItems(volumeInfo)
+        }
+
+        adapter = LibraryAdapter(this)
         binding.libraryRecyclerView.layoutManager = GridLayoutManager(activity,2,
             RecyclerView.VERTICAL,false)
         binding.libraryRecyclerView.adapter = adapter
     }
 
-    override fun onStart() {
-        super.onStart()
-        adapter.startListening()
-    }
 
-    override fun onStop() {
-        super.onStop()
-        adapter.stopListening()
-    }
-
-    override fun onLibClicked(bookId: String) {
-
+    override fun onLibClicked(volumeInfo: VolumeInfo) {
+        viewModel.sendBook(volumeInfo)
+        val bottomSheetDialog = BookBottomSheetDialog()
+        fragmentManager?.let { bottomSheetDialog.show(it,bottomSheetDialog.tag) }
     }
 }

@@ -13,13 +13,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bookapp.R
 import com.example.bookapp.adapters.OnPostClickedListener
-import com.example.bookapp.adapters.PostAdapter
 import com.example.bookapp.adapters.PostFeedAdapter
 import com.example.bookapp.dao.PostDao
 import com.example.bookapp.databinding.FragmentFeedBinding
 import com.example.bookapp.firebaseModals.Post
+import com.example.bookapp.modals.VolumeInfo
 import com.example.bookapp.viewModels.BookSharedViewModel
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,6 +39,8 @@ class FeedFragment : Fragment() , OnPostClickedListener{
 //    lateinit var viewModel: BookSharedViewModel
     @Inject lateinit var postDao: PostDao
     @Inject lateinit var db : FirebaseFirestore
+    @Inject lateinit var auth: FirebaseAuth
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,6 +54,7 @@ class FeedFragment : Fragment() , OnPostClickedListener{
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //val db = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance()
         val postCollection = db.collection("posts")
         val query = postCollection.orderBy("createdAt", Query.Direction.DESCENDING)
         query.addSnapshotListener { value, e ->
@@ -83,6 +87,18 @@ class FeedFragment : Fragment() , OnPostClickedListener{
         val fragment = PostUserFragment()
         setCurrentFragment(fragment)
         //findNavController().navigate(FeedFragmentDirections.actionFeedFragmentToPostUserFragment())
+    }
+
+    override fun onLikedClicked(post: Post) {
+        val currentUserId = auth.currentUser!!.uid
+        val isLiked = post.liked.contains(currentUserId)
+        val str = post.postId
+        if(isLiked){
+            post.liked.remove(currentUserId)
+        }else{
+            post.liked.add(currentUserId)
+        }
+        db.collection("posts").document(str).set(post)
     }
 
     private fun setCurrentFragment(fragment : Fragment){

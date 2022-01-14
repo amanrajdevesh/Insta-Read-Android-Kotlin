@@ -36,8 +36,6 @@ class PostUserFragment : Fragment() {
     @Inject
     lateinit var db : FirebaseFirestore
     @Inject lateinit var userDao: UserDao
-    lateinit var user : User
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,18 +66,13 @@ class PostUserFragment : Fragment() {
         //viewModel = ViewModelProvider(requireActivity()).get(BookSharedViewModel::class.java)
         viewModel.post.observe(viewLifecycleOwner , Observer {
             binding.apply {
-                userDao.getUser(it.uid).addOnSuccessListener {  document ->
-                    if(document!=null){
-                        user = document.toObject(User::class.java)!!
-                    }
-                }
-                userName.text = user.name
-                userPost.text = user.post.toString()
-                userFav.text = user.favourites.toString()
-                userLib.text = user.library.toString()
-                Picasso.get().load(user.imageUrl).into(userImage)
+                userName.text = it.user.name
+                userPost.text = it.user.post.toString()
+                userFav.text = it.user.favourites.toString()
+                userLib.text = it.user.library.toString()
+                Picasso.get().load(it.user.imageUrl).into(userImage)
             }
-            val query = bookCollection.whereEqualTo("user.uid",it.uid)
+            val query = bookCollection.whereEqualTo("user.uid",it.user.uid)
                 .whereEqualTo("favourite",true)
             query.addSnapshotListener { value, e ->
                 if (e != null) {

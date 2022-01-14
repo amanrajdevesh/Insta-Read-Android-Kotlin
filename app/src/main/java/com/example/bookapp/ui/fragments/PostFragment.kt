@@ -11,6 +11,7 @@ import com.example.bookapp.R
 import com.example.bookapp.dao.PostDao
 import com.example.bookapp.databinding.FragmentPostBinding
 import com.example.bookapp.firebaseModals.Post
+import com.example.bookapp.modals.VolumeInfo
 import com.squareup.picasso.Picasso
 
 class PostFragment : Fragment() {
@@ -27,15 +28,15 @@ class PostFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val args = PostFragmentArgs.fromBundle(requireArguments())
-        val item = args.item
-        Picasso.get().load(item.volumeInfo.imageLinks.getImage()).into(binding.imageView)
-        binding.etPostTitle.setText(item.volumeInfo.title.toString())
-        val author = item.volumeInfo.authors
+        val args = this.arguments
+        val volumeInfo = args?.getParcelable<VolumeInfo>("book")
+        Picasso.get().load(volumeInfo?.imageLinks?.getImage()).into(binding.imageView)
+        binding.etPostTitle.setText(volumeInfo?.title.toString())
+        val author = volumeInfo?.authors
         binding.etPostAuthor.setText(author?.get(0).toString())
-        val type = item.volumeInfo.categories
-        if(type.isNotEmpty()){
-            binding.etPostType.setText(type[0].toString())
+        val type = volumeInfo?.categories
+        if(type?.isNotEmpty() == true){
+            binding.etPostType.setText(type?.get(0)?.toString())
         }
         var readType = ""
         binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
@@ -57,13 +58,14 @@ class PostFragment : Fragment() {
             val currentTime = System.currentTimeMillis()
             postDao.addPost(
                 Post(
-                    item.volumeInfo.title,
+                    volumeInfo!!.title,
                     author?.get(0),
-                    type[0],
-                    item.volumeInfo.imageLinks.getImage(),
+                    type!![0],
+                    volumeInfo.imageLinks.getImage(),
                     body,
                     readType,
-                    currentTime
+                    currentTime,
+                    identifier = volumeInfo.industryIdentifiers[0].identifier
                 )
             )
         }

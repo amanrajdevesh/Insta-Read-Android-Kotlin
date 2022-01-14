@@ -11,24 +11,35 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.squareup.picasso.Picasso
 
-class LibraryAdapter(private val options: FirestoreRecyclerOptions<VolumeInfo>,
-                     private val libClicked : OnLibClickListener) : FirestoreRecyclerAdapter<VolumeInfo, LibraryViewHolder>(options){
+class LibraryAdapter(private val libClicked : OnLibClickListener) : RecyclerView.Adapter<LibraryViewHolder>(){
 
+    private val bookList = ArrayList<VolumeInfo>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibraryViewHolder {
-        val viewHolder =
-            LibraryViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_user_book, parent, false))
+        val viewHolder = LibraryViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_user_book, parent, false))
         viewHolder.image.setOnClickListener {
-            libClicked.onLibClicked(snapshots.getSnapshot(viewHolder.adapterPosition).id)
+            libClicked.onLibClicked(bookList[viewHolder.adapterPosition])
         }
         return viewHolder
     }
 
-    override fun onBindViewHolder(holder: LibraryViewHolder, position: Int, model: VolumeInfo) {
-        val image = model.imageLinks.getImage()
+    override fun onBindViewHolder(holder: LibraryViewHolder, position: Int) {
+        val volume = bookList[position]
+        val image = volume.imageLinks.getImage()
         if(image.isNotEmpty()){
             Picasso.get().load(image).into(holder.image)}
+     }
+
+    override fun getItemCount(): Int {
+        return bookList.size
     }
+
+    fun addAllItems(list : List<VolumeInfo>){
+        bookList.clear()
+        bookList.addAll(list)
+        notifyDataSetChanged()
+    }
+
 }
 
 class LibraryViewHolder(view : View) : RecyclerView.ViewHolder(view) {
@@ -36,5 +47,5 @@ class LibraryViewHolder(view : View) : RecyclerView.ViewHolder(view) {
 }
 
 interface OnLibClickListener {
-    fun onLibClicked(bookId : String)
+    fun onLibClicked(volumeInfo: VolumeInfo)
 }

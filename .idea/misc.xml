@@ -6,10 +6,13 @@
         <entry key="app/src/main/res/drawable/edittext_round_shape.xml" value="0.27870370370370373" />
         <entry key="app/src/main/res/drawable/ic_baseline_bookmark_border_24.xml" value="0.27870370370370373" />
         <entry key="app/src/main/res/drawable/ic_baseline_favorite_border_24.xml" value="0.27870370370370373" />
+        <entry key="app/src/main/res/drawable/ic_baseline_insert_comment_24.xml" value="0.17592592592592593" />
         <entry key="app/src/main/res/drawable/ic_baseline_local_library_24.xml" value="0.27870370370370373" />
         <entry key="app/src/main/res/drawable/ic_baseline_menu_book_24.xml" value="0.27870370370370373" />
         <entry key="app/src/main/res/drawable/ic_baseline_post_add_24.xml" value="0.27870370370370373" />
+        <entry key="app/src/main/res/drawable/ic_liked.xml" value="0.17592592592592593" />
         <entry key="app/src/main/res/drawable/ic_menu.xml" value="0.225" />
+        <entry key="app/src/main/res/drawable/ic_unliked.xml" value="0.17592592592592593" />
         <entry key="app/src/main/res/layout/activity_book.xml" value="0.2" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.22" />

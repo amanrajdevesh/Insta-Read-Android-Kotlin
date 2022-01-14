@@ -47,7 +47,7 @@ class PostFeedFragment : Fragment(), OnPostClickedListener {
         val postCollection = db.collection("posts")
        // viewModel = ViewModelProvider(requireActivity()).get(BookSharedViewModel::class.java)
         viewModel.post.observe(viewLifecycleOwner, Observer {
-            val uid = it.uid
+            val uid = it.user.uid
             val query = postCollection.orderBy("createdAt", Query.Direction.DESCENDING)
                 .whereEqualTo("user.uid",uid)
             query.addSnapshotListener { value, e ->
@@ -74,6 +74,10 @@ class PostFeedFragment : Fragment(), OnPostClickedListener {
     }
 
     override fun onPostClicked(post: Post) {
+
+    }
+
+    override fun onLikedClicked(post: Post) {
 
     }
 }

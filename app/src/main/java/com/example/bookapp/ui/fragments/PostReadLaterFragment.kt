@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bookapp.R
 import com.example.bookapp.adapters.BottomSheetRecyclerAdapter
+import com.example.bookapp.adapters.LibraryAdapter
+import com.example.bookapp.adapters.OnLibClickListener
 import com.example.bookapp.databinding.FragmentPostReadLaterBinding
 import com.example.bookapp.modals.VolumeInfo
 import com.example.bookapp.viewModels.BookSharedViewModel
@@ -22,10 +24,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class PostReadLaterFragment : Fragment() {
+class PostReadLaterFragment : Fragment(), OnLibClickListener {
 
     lateinit var binding : FragmentPostReadLaterBinding
-    lateinit var adapter: BottomSheetRecyclerAdapter
+    lateinit var adapter: LibraryAdapter
     //lateinit var viewModel: BookSharedViewModel
     private val viewModel: BookSharedViewModel by activityViewModels()
     @Inject
@@ -46,7 +48,7 @@ class PostReadLaterFragment : Fragment() {
         val bookCollection = db.collection("books")
         //viewModel = ViewModelProvider(requireActivity()).get(BookSharedViewModel::class.java)
         viewModel.post.observe(viewLifecycleOwner, Observer {
-            val uid = it.uid
+            val uid = it.user.uid
             val query = bookCollection.whereEqualTo("user.uid" , uid)
                 .whereEqualTo("readLater" , true)
             query.addSnapshotListener { value, e ->
@@ -67,10 +69,15 @@ class PostReadLaterFragment : Fragment() {
     }
 
     private fun setUpRecyclerView() {
-        adapter = BottomSheetRecyclerAdapter()
-        binding.libraryRecyclerView.layoutManager = GridLayoutManager(activity,2,
-            RecyclerView.VERTICAL,false)
+        adapter = LibraryAdapter(this)
+        binding.libraryRecyclerView.layoutManager = GridLayoutManager(activity,2,RecyclerView.VERTICAL,false)
         binding.libraryRecyclerView.adapter = adapter
+    }
+
+    override fun onLibClicked(volumeInfo: VolumeInfo) {
+        viewModel.sendBook(volumeInfo)
+        val bottomSheetDialog = BookBottomSheetDialog()
+        fragmentManager?.let { bottomSheetDialog.show(it,bottomSheetDialog.tag) }
     }
 
 }

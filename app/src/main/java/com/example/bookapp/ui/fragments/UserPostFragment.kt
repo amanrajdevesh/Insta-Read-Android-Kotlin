@@ -10,7 +10,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bookapp.R
 import com.example.bookapp.adapters.OnPostClickedListener
-import com.example.bookapp.adapters.PostAdapter
 import com.example.bookapp.adapters.PostFeedAdapter
 import com.example.bookapp.databinding.FragmentUserPostBinding
 import com.example.bookapp.firebaseModals.Post
@@ -69,6 +68,10 @@ class UserPostFragment : Fragment(), OnPostClickedListener {
     }
 
     override fun onPostClicked(post: Post) {
+
+    }
+
+    override fun onLikedClicked(post: Post) {
 
     }
 

@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
         postBookFragment = PostBookFragment()
         userFragment = UserFragment()
 
-        setCurrentFragment(feedFragment)
+        setCurrentFragment(searchFragment)
 
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             when(item.itemId){

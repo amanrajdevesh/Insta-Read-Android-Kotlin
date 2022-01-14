@@ -1,6 +1,7 @@
 package com.example.bookapp.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
@@ -13,6 +14,7 @@ import com.example.bookapp.adapters.LibraryAdapter
 import com.example.bookapp.adapters.OnLibClickListener
 import com.example.bookapp.dao.BookDao
 import com.example.bookapp.databinding.FragmentLibraryBinding
+import com.example.bookapp.firebaseModals.Post
 import com.example.bookapp.modals.VolumeInfo
 import com.example.bookapp.viewModels.BookSharedViewModel
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
@@ -50,30 +52,32 @@ class LibraryFragment : Fragment() , OnLibClickListener {
         //viewModel = ViewModelProvider(requireActivity()).get(BookSharedViewModel::class.java)
 
         val bookCollection = db.collection("books")
-        val query = bookCollection.whereEqualTo("user.uid" , auth.currentUser!!.uid.toString())
+        val query = bookCollection.whereEqualTo("user.uid" , auth.currentUser!!.uid)
             .whereEqualTo("readLater" , false)
-        val option = FirestoreRecyclerOptions.Builder<VolumeInfo>().setQuery(query , VolumeInfo::class.java).build()
+        query.addSnapshotListener { value, e ->
+            if (e != null) {
+                Log.w("Aman", "Listen failed.", e)
+                return@addSnapshotListener
+            }
 
-        adapter = LibraryAdapter(option,this)
+            val volumeInfo = ArrayList<VolumeInfo>()
+            for (doc in value!!) {
+                doc.toObject(VolumeInfo::class.java)?.let { p ->
+                    volumeInfo.add(p)
+                }
+            }
+            adapter.addAllItems(volumeInfo)
+        }
+        //val option = FirestoreRecyclerOptions.Builder<VolumeInfo>().setQuery(query , VolumeInfo::class.java).build()
+
+        adapter = LibraryAdapter(this)
         binding.libraryRecyclerView.layoutManager = GridLayoutManager(activity,2,RecyclerView.VERTICAL,false)
         binding.libraryRecyclerView.adapter = adapter
     }
 
-    override fun onStart() {
-        super.onStart()
-        adapter.startListening()
-    }
 
-    override fun onStop() {
-        super.onStop()
-        adapter.stopListening()
-    }
-
-    override fun onLibClicked(bookId: String) {
-        CoroutineScope(Dispatchers.Main).launch {
-            val book = async { bookDao.getBook(bookId) }
-            viewModel.sendBook(book.await())
-        }
+    override fun onLibClicked(volumeInfo: VolumeInfo) {
+        viewModel.sendBook(volumeInfo)
         val bottomSheetDialog = BookBottomSheetDialog()
         fragmentManager?.let { bottomSheetDialog.show(it,bottomSheetDialog.tag) }
     }
